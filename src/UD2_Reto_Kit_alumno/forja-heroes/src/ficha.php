@@ -100,14 +100,14 @@ $danioFormateado   = number_format($danio, 1, ',', '.');
 $pctVidaFormateado = number_format($pctVida, 1, ',', '.');
 
 // Registro de combate construido con concatenación compuesta (.=) en al menos 3 pasos
-$registroCombate  = '[' . date('H:i:s') . '] ' . $nombreHeroe . ' (nv. ' . $nivel . ') ';
+$registroCombate  = '[' . date('H:i:s') . '] ' . $nombreSeguro . ' (nv. ' . $nivel . ') ';
 $registroCombate .= 'se prepara para combatir contra ' . NOMBRE_RIVAL . ' (poder ' . PODER_RIVAL . '). ';
 $registroCombate .= 'Resultado táctico: ' . $veredicto;
 
 // Crónica de tres líneas con sintaxis heredoc interpolando variables
 $claseHeroe = CLASE_HEROE;
 $cronica = <<<CRONICA
-La combatiente {$nombreHeroe}, formidable {$claseHeroe} de nivel {$nivel}, vigila atenta la forja.
+La combatiente {$nombreSeguro}, formidable {$claseHeroe} de nivel {$nivel}, vigila atenta la forja.
 Aún necesita acumular {$xpParaSubir} puntos de experiencia para alcanzar el siguiente nivel.
 Tras sus recientes lances y fatigas, su estado actual de combate es: {$estado}.
 CRONICA;
