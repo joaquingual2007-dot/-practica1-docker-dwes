@@ -1,0 +1,33 @@
+# =====================================================================
+#  UD2 · Caso guiado "Estación orbital ARES-7"
+#  Entorno: servidor web (Nginx) + intérprete PHP (PHP-FPM) en
+#  contenedores SEPARADOS, igual que en producción.
+#
+#  Arrancar:   docker compose up -d
+#  Abrir:      http://localhost:8080
+#  Parar:      docker compose down
+#
+#  (MySQL no hace falta todavía: se añadirá como tercer contenedor
+#   en la UD9, Acceso a datos.)
+# =====================================================================
+services:
+
+  # --- Servidor web: recibe la petición HTTP del navegador ---------
+  web:
+    image: nginx:stable-alpine
+    ports:
+      - "8080:80"                      # puerto_del_host:puerto_del_contenedor
+    volumes:
+      - ./src:/var/www/html:ro         # nuestro código (solo lectura para Nginx)
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - php
+
+  # --- Intérprete PHP: ejecuta los .php que Nginx le pasa ---------
+  php:
+    image: php:8.4-fpm-alpine          # PHP 8.4 (soportado). También funciona con 8.5.
+    volumes:
+      - ./src:/var/www/html
+      # Nuestras DIRECTIVAS personalizadas (ver UD2, CE f).
+      # Todo .ini de conf.d se carga al arrancar PHP-FPM.
+      - ./php/ares7.ini:/usr/local/etc/php/conf.d/zz-ares7.ini:ro
