@@ -2,28 +2,38 @@
 
 **Alumno/a:** Joaquín Gutiérrez Almagro · **Variante:** A (Guerrera) · **Fecha:** 06/10/2026
 
-> Las capturas van en la carpeta `capturas/` y se enlazan así: `![descripción](capturas/nombre.png)`
+Las capturas de evidencia se muestran debajo de cada apartado.
 
 ## 1. Comprobación de resultados (CE 2.e)
 
-Rellena la tabla con los valores que muestra TU ficha y compáralos con la tabla de comprobación del enunciado.
+La tabla compara los valores que muestra la ficha con la tabla de comprobación del enunciado.
 
 | Dato | Valor esperado (enunciado) | Valor de mi ficha | ¿Coincide? |
 |---|---|---|---|
 | Nivel | 6 | 6 | Sí |
-| Vida máxima | 320 | 320 | Sí |
+| XP en el nivel / faltan | 350 / 50 | 350 / 50 | Sí |
+| Vida actual / máxima | 118 / 320 | 118 / 320 | Sí |
 | % de vida | 36,9 % | 36,9 % | Sí |
 | Daño | 40,9 | 40,9 | Sí |
 | Estadística especial | 6 % | 6 % | Sí |
 | Poder | 245 | 245 | Sí |
 | Resultado frente al rival | 1 → Ventaja: ¡a la carga! | 1 → Ventaja: ¡a la carga! | Sí |
+| Estado | En pie | En pie | Sí |
+| ¿Puede ascender? / ¿Necesita poción? | No / Sí | No / Sí | Sí |
+| Oro | 1.520,75 mo | 1.520,75 mo | Sí |
+| Bloques de vida / XP | 7 / 18 | 7 / 18 | Sí |
 
 ---
 
 ## 2. El código fuente y el documento resultante (CE 2.e · CE 2.c)
 
-- Captura de `ficha.php` en el editor (parte de cálculos): `![Cálculos en el editor](capturas/calculos_editor.png)`
-- Captura del **Ctrl+U** de la página: `![Código fuente en el navegador (Ctrl+U)](capturas/codigo_fuente_ctrl_u.png)`
+**Cálculos de `ficha.php` en el editor:**
+
+![Cálculos en el editor](capturas/calculos_editor.png)
+
+**Código fuente recibido por el navegador (Ctrl+U):**
+
+![Código fuente en el navegador (Ctrl+U)](capturas/codigo_fuente_ctrl_u.png)
 
 ### Explicación de tres diferencias entre ambas:
 
@@ -51,7 +61,8 @@ Esto es imprescindible para garantizar la seguridad frente a ataques de inyecci�
    - Las demás estadísticas (nivel, daño, crítico, poder y rival) permanecerán exactamente iguales porque no dependen de la constitución.
 
 3. **Resultado real (captura):**
-   `![Experimento de mutación](capturas/experimento_mutacion.png)`
+
+   ![Experimento de mutación](capturas/experimento_mutacion.png)
 
 4. **¿Acertaste? Si no, ¿por qué?**
    Sí, acerté en todos los valores calculados: la vida máxima se incrementó a 410, el porcentaje bajó a 28,8%, el estado pasó automáticamente a «En peligro» y la barra visual se redujo a 6 bloques llenos, demostrando el dinamismo de PHP al recalcular todo desde cero en cada petición.
@@ -61,11 +72,12 @@ Esto es imprescindible para garantizar la seguridad frente a ataques de inyecci�
 ## 4. Experimento con strict_types (CE 2.f)
 
 1. **Quita el `(int)` del cálculo de los bloques de la barra de vida. Recarga. Captura del error:**
-   `![Error strict_types](capturas/error_strict_types.png)`
+
+   ![Error strict_types](capturas/error_strict_types.png)
 
 2. **Explica qué dice el mensaje (tipo de error, función, argumento, línea):**
    El motor de PHP detiene la ejecución y arroja una excepción fatal de tipo **TypeError**:
-   `Fatal error: Uncaught TypeError: str_repeat(): Argument #2 ($times) must be of type int, float given, called in /var/www/html/ficha.php on line 73`
+   `Fatal error: Uncaught TypeError: str_repeat(): Argument #2 ($times) must be of type int, float given, called in /var/www/html/ficha.php on line 89`
    - **Tipo de error:** `TypeError` (error fatal en tiempo de ejecución por discrepancia de tipo).
    - **Función afectada:** `str_repeat()`.
    - **Argumento:** Argumento nº 2 (`$times`), que define la cantidad de repeticiones.
@@ -81,7 +93,9 @@ Esto es imprescindible para garantizar la seguridad frente a ataques de inyecci�
 
 ## 5. Directivas (CE 2.f)
 
-- **Captura de `diagnostico.php`:** `![Panel de diagnóstico](capturas/diagnostico.png)`
+- **Captura de `diagnostico.php`:**
+
+  ![Panel de diagnóstico](capturas/diagnostico.png)
 - **¿Qué valor pondrías en `display_errors` en un servidor de producción? ¿Por qué?**
   En un servidor de producción se debe configurar obligatoriamente `display_errors = Off` (o `0`). Mostrar los errores de ejecución directamente en el navegador del usuario final es una vulnerabilidad grave de revelación de información sensible (*Information Disclosure*), ya que expone rutas absolutas del servidor, detalles del sistema operativo, versiones de software y consultas internas que pueden ser explotadas por atacantes. En producción, los errores deben guardarse en ficheros de registro internos del sistema (`log_errors = On`) y al usuario se le debe mostrar una página de error genérica y amigable.
 
