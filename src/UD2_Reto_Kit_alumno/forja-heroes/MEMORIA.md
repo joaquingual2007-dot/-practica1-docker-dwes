@@ -1,6 +1,6 @@
 # Memoria · Reto UD2 «Forja de Héroes»
 
-**Alumno/a:** Joaquín Gutiérrez Almagro · **Variante:** A (Guerrera) · **Fecha:** 06/10/2026
+**Alumno/a:** Joaquín Gutiérrez Almagro · **Variante:** A (Guerrera) · **Fecha:** 07/10/2026
 
 Las capturas de evidencia se muestran debajo de cada apartado.
 
@@ -22,6 +22,10 @@ La tabla compara los valores que muestra la ficha con la tabla de comprobación 
 | ¿Puede ascender? / ¿Necesita poción? | No / Sí | No / Sí | Sí |
 | Oro | 1.520,75 mo | 1.520,75 mo | Sí |
 | Bloques de vida / XP | 7 / 18 | 7 / 18 | Sí |
+
+**Ficha completa ejecutándose en PHP:**
+
+![Ficha completa](capturas/ficha.png)
 
 ---
 
