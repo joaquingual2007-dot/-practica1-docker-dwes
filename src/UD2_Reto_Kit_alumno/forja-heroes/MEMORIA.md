@@ -4,6 +4,8 @@
 
 Las capturas de evidencia se muestran debajo de cada apartado.
 
+La aplicación se ejecuta con Docker Desktop en Windows. `PHP_OS` muestra Linux porque PHP corre dentro de un contenedor Linux; no indica el sistema operativo del ordenador anfitrión.
+
 ## 1. Comprobación de resultados (CE 2.e)
 
 La tabla compara los valores que muestra la ficha con la tabla de comprobación del enunciado.

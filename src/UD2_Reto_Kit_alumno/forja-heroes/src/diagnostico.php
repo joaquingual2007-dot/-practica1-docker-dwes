@@ -58,7 +58,7 @@ $retornoShortOpenTag = ini_set('short_open_tag', '1');
 <body>
 <main>
     <h1>Diagnóstico del servidor</h1>
-    <p class="subtitulo">PHP <?= PHP_VERSION ?> · Sistema: <?= PHP_OS ?></p>
+    <p class="subtitulo">PHP <?= PHP_VERSION ?> · Sistema del contenedor: <?= PHP_OS ?></p>
 
     <h2>Directivas configuradas en php/forja.ini</h2>
     <table>
