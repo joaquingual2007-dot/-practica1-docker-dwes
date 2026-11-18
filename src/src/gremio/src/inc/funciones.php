@@ -25,40 +25,62 @@ function e(string $texto): string
 /**
  * PARTE 1 · Nombre del rango.
  * E Novato · D Aprendiz · C Veterano · B Experto · A Élite · S Leyenda
- * TODO: usa match. Pregunta para la memoria: ¿pones default? ¿por qué?
  */
 function etiquetaRango(string $rango): string
 {
-    return '¿?'; // TODO
+    return match ($rango) {
+        'E' => 'Novato',
+        'D' => 'Aprendiz',
+        'C' => 'Veterano',
+        'B' => 'Experto',
+        'A' => 'Élite',
+        'S' => 'Leyenda',
+        default => 'Desconocido',
+    };
 }
 
 /**
  * PARTE 1 · Clase CSS según dificultad.
  * E y D → 'facil' · C y B → 'media' · A y S → 'dificil'
- * TODO: usa match con varios valores por brazo.
  */
 function claseRango(string $rango): string
 {
-    return ''; // TODO
+    return match ($rango) {
+        'E', 'D' => 'facil',
+        'C', 'B' => 'media',
+        'A', 'S' => 'dificil',
+        default  => '',
+    };
 }
 
 /**
  * PARTE 1 · Formatea monedas de oro: 5000 → "5.000 mo".
- * TODO: busca number_format en el manual de PHP.
  */
 function formatearOro(int $oro): string
 {
-    return $oro . ' mo'; // TODO
+    return number_format($oro, 0, ',', '.') . ' mo';
 }
 
 /**
  * PARTE 2 · Filtra misiones por rango (null = todos) y recompensa mínima.
- * TODO: recorre con foreach y construye un array nuevo. No uses array_filter
- *       todavía: queremos ver el bucle.
  */
 function filtrarMisiones(array $misiones, ?string $rango, int $oroMinimo): array
 {
-    return $misiones; // TODO
+    $resultado = [];
+
+    foreach ($misiones as $mision) {
+        if ($rango !== null && $mision['rango'] !== $rango) {
+            continue;
+        }
+
+        if ($mision['recompensa'] < $oroMinimo) {
+            continue;
+        }
+
+        $resultado[] = $mision;
+    }
+
+    return $resultado;
 }
 
 /**
@@ -66,7 +88,13 @@ function filtrarMisiones(array $misiones, ?string $rango, int $oroMinimo): array
  */
 function buscarMision(array $misiones, string $id): ?array
 {
-    return null; // TODO
+    foreach ($misiones as $mision) {
+        if ($mision['id'] === $id) {
+            return $mision;
+        }
+    }
+
+    return null;
 }
 
 /**
@@ -75,7 +103,16 @@ function buscarMision(array $misiones, string $id): ?array
  */
 function totalRecompensa(array $misiones, array $ids): int
 {
-    return 0; // TODO
+    $total = 0;
+
+    foreach ($ids as $id) {
+        $mision = buscarMision($misiones, $id);
+        if ($mision !== null) {
+            $total += $mision['recompensa'];
+        }
+    }
+
+    return $total;
 }
 
 /**
@@ -85,15 +122,36 @@ function totalRecompensa(array $misiones, array $ids): int
  */
 function leerRangoFiltro(array $get): ?string
 {
-    return null; // TODO
+    if (!isset($get['rango']) || !is_string($get['rango'])) {
+        return null;
+    }
+
+    $rango = strtoupper(trim($get['rango']));
+
+    if (in_array($rango, RANGOS, true)) {
+        return $rango;
+    }
+
+    return null;
 }
 
 /**
  * PARTE 2 · Lee $_GET['oro'] y lo valida como entero entre 0 y 10000.
  * Si no viene o no es válido, 0.
- * TODO: filter_var con FILTER_VALIDATE_INT y opciones min_range / max_range.
  */
 function leerOroMinimo(array $get): int
 {
-    return 0; // TODO
+    if (!isset($get['oro'])) {
+        return 0;
+    }
+
+    $valor = filter_var($get['oro'], FILTER_VALIDATE_INT, [
+        'options' => [
+            'min_range' => 0,
+            'max_range' => 10000,
+            'default'   => 0,
+        ],
+    ]);
+
+    return $valor !== false ? $valor : 0;
 }
