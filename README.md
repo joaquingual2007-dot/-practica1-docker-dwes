@@ -73,3 +73,10 @@ gremio/
 ├── LEEME.md                 # Enunciado y especificaciones del profesor
 └── MEMORIA.md               # Memoria técnica de la práctica
 ```
+
+
+---
+
+## Uso de la IA
+
+He usado la IA para el README y en forma de apoyo a lo largo del proyecto.
