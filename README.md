@@ -103,4 +103,4 @@ gremio/
 
 ## Uso de la IA
 
-He usado la IA para el README y en forma de apoyo a lo largo del proyecto.
+He usado la IA para el README, MEMORIA y en forma de apoyo a lo largo del proyecto.
