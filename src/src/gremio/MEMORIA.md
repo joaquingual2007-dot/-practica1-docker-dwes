@@ -1,7 +1,5 @@
 # Memoria · Gremio de Aventureros
 
-**Código de alumno/a:** ______ (rellenar con tu código)
-
 ## 1. Mi aventurero
 - Usuario que he añadido a la tabla: `roble`
 - Comando que he usado para generar el hash:
