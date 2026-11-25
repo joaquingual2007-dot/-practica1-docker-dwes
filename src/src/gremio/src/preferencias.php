@@ -16,9 +16,17 @@ iniciarSesion();
 $aventurero = requiereLogin();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // TODO: valida $_POST['tema'] contra TEMAS (in_array estricto).
-    //  Si es válido → guardarTema() y flash; si no → flash 'Tema no válido.'
-    //  Redirige a preferencias.php.
+    $tema = isset($_POST['tema']) && is_string($_POST['tema']) ? $_POST['tema'] : '';
+
+    if (in_array($tema, TEMAS, true)) {
+        guardarTema($tema);
+        mensajeFlash("Tema cambiado a «{$tema}».");
+    } else {
+        mensajeFlash('Tema no válido.');
+    }
+
+    header('Location: preferencias.php');
+    exit;
 }
 
 $temaGuardado = temaActual();
@@ -42,6 +50,6 @@ require __DIR__ . '/inc/cabecera.php';
         </fieldset>
         <button type="submit">Guardar</button>
     </form>
-    <!-- TODO: muestra el valor CRUDO de la cookie COOKIE_TEMA (escapado con e()). -->
+    <p class="nota">Valor actual de la cookie <code><?= e(COOKIE_TEMA) ?></code>: <code><?= e($_COOKIE[COOKIE_TEMA] ?? '(no definida)') ?></code></p>
 </section>
 <?php require __DIR__ . '/inc/pie.php'; ?>

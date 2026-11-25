@@ -26,8 +26,8 @@ function iniciarSesion(): void
     session_set_cookie_params([
         'lifetime' => 0,
         'path'     => '/',
-        'httponly' => true,
-        'samesite' => 'Lax',
+        'httponly'  => true,
+        'samesite'  => 'Lax',
     ]);
     session_start();
 }
@@ -41,13 +41,17 @@ function aventureroActual(): ?array
 /**
  * Protege una página: si no hay sesión, redirige a login.php?motivo=privado
  * y TERMINA el script. Si la hay, devuelve el aventurero.
- *
- * TODO (Parte 3): ahora devuelve un invitado para que puedas hacer las
- * partes 1 y 2 sin login. Cuando llegues a la Parte 3, cámbialo.
  */
 function requiereLogin(): array
 {
-    return ['id' => 0, 'usuario' => 'invitado', 'nombre' => 'Invitado', 'clase' => '—']; // TODO
+    $aventurero = aventureroActual();
+
+    if ($aventurero === null) {
+        header('Location: login.php?motivo=privado');
+        exit;
+    }
+
+    return $aventurero;
 }
 
 /** Guarda un mensaje para mostrarlo UNA vez en la siguiente página. (Dado) */
@@ -70,45 +74,70 @@ function leerFlash(): ?string
  */
 function temaActual(): string
 {
-    return 'claro'; // TODO
+    $tema = $_COOKIE[COOKIE_TEMA] ?? '';
+
+    if (in_array($tema, TEMAS, true)) {
+        return $tema;
+    }
+
+    return 'claro';
 }
 
 /**
  * Guarda el tema en la cookie COOKIE_TEMA durante un año.
- * TODO: setcookie con array de opciones: expires, path '/', httponly, samesite 'Lax'.
  */
 function guardarTema(string $tema): void
 {
-    // TODO
+    setcookie(COOKIE_TEMA, $tema, [
+        'expires'  => time() + 365 * 24 * 60 * 60,
+        'path'     => '/',
+        'httponly'  => false,
+        'samesite'  => 'Lax',
+    ]);
 }
 
 /** Guarda el NOMBRE DE USUARIO (nunca la contraseña) 30 días en COOKIE_USUARIO. */
 function recordarUsuario(string $usuario): void
 {
-    // TODO
+    setcookie(COOKIE_USUARIO, $usuario, [
+        'expires'  => time() + 30 * 24 * 60 * 60,
+        'path'     => '/',
+        'httponly'  => true,
+        'samesite'  => 'Lax',
+    ]);
 }
 
 /** Borra la cookie COOKIE_USUARIO (pista: caducidad en el pasado). */
 function olvidarUsuario(): void
 {
-    // TODO
+    setcookie(COOKIE_USUARIO, '', [
+        'expires'  => time() - 3600,
+        'path'     => '/',
+        'httponly'  => true,
+        'samesite'  => 'Lax',
+    ]);
 }
 
 /**
  * Comprueba las credenciales contra la tabla `aventureros`.
  * Devuelve id, usuario, nombre y clase (SIN el hash) o null si no son correctas.
- *
- * TODO:
- *  1. Consulta preparada con un marcador :usuario. PROHIBIDO concatenar.
- *  2. Si no hay fila → null.
- *  3. password_verify($clave, $fila['password_hash']); si falla → null.
- *  4. Quita el hash del array antes de devolverlo.
- *  Pregunta para la memoria: ¿por qué el mensaje de error es el mismo si
- *  falla el usuario que si falla la contraseña?
  */
 function autenticar(PDO $pdo, string $usuario, string $clave): ?array
 {
-    return null; // TODO
+    $stmt = $pdo->prepare('SELECT * FROM aventureros WHERE usuario = :usuario');
+    $stmt->execute([':usuario' => $usuario]);
+    $fila = $stmt->fetch();
+
+    if ($fila === false) {
+        return null;
+    }
+
+    if (!password_verify($clave, $fila['password_hash'])) {
+        return null;
+    }
+
+    unset($fila['password_hash']);
+    return $fila;
 }
 
 /**
@@ -117,5 +146,17 @@ function autenticar(PDO $pdo, string $usuario, string $clave): ?array
  */
 function cerrarSesion(): void
 {
-    // TODO
+    $_SESSION = [];
+
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', [
+        'expires'  => time() - 3600,
+        'path'     => $params['path'],
+        'domain'   => $params['domain'],
+        'secure'   => $params['secure'],
+        'httponly'  => $params['httponly'],
+        'samesite'  => $params['samesite'] ?? 'Lax',
+    ]);
+
+    session_destroy();
 }

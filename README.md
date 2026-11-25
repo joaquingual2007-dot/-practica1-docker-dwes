@@ -33,6 +33,29 @@ Digitalización del tablón de misiones del Gremio de Aventureros utilizando PHP
 
 ---
 
+## 📌 Entrega 2: Miembros del gremio
+
+### Parte 3 · Autenticación, sesiones y cookies
+
+#### Autenticación contra la base de datos (CE 4.e.1)
+- Función `autenticar()` con consulta preparada (`marcador :usuario`) y verificación del hash con `password_verify()`.
+- `login.php` con validación de campos, captura de `PDOException` (detalle al `error_log()`, mensaje genérico al usuario) y `session_regenerate_id(true)` tras login exitoso.
+- `requiereLogin()` protege `tablon.php`, `zurron.php` y `preferencias.php`: sin sesión activa, redirige a `login.php?motivo=privado`.
+- `cerrarSesion()` destruye la sesión completamente: vacía `$_SESSION`, caduca la cookie de sesión y llama a `session_destroy()`.
+- Aventurero propio añadido con hash bcrypt generado por `password_hash()` (INSERT en `sql/mi_aventurero.sql`).
+
+#### Estado con sesiones (CE 4.b)
+- Zurrón almacenado en `$_SESSION['zurron']`: persiste entre páginas y se vacía al cerrar sesión.
+- Contador de visitas al tablón (`$_SESSION['visitas']`) y hora de entrada (`$_SESSION['entrada']`) visibles en la cabecera del tablón.
+- Mensajes flash entre páginas mediante `$_SESSION['flash']`.
+
+#### Cookies (CE 4.c)
+- Tema claro/oscuro en `preferencias.php`, almacenado un año en la cookie `gremio_tema`. Validación del valor leído contra la lista `TEMAS`; si se manipula, se revierte a «claro».
+- Casilla «Recordar mi usuario»: cookie `gremio_usuario` de 30 días con el nombre de usuario (nunca la contraseña). Al desmarcar, se borra la cookie.
+- Todas las cookies configuradas con `path '/'`, `httponly` y `samesite 'Lax'` (array de opciones de `setcookie`).
+
+---
+
 ## 🚀 Despliegue con Docker
 
 1. **Arrancar el entorno:**
@@ -46,6 +69,7 @@ Digitalización del tablón de misiones del Gremio de Aventureros utilizando PHP
 
 3. **Base de datos:**
    - Importar `gremio/sql/gremio.sql` en la base de datos del entorno para la tabla `aventureros`.
+   - Importar `gremio/sql/mi_aventurero.sql` para añadir el aventurero propio.
 
 ---
 
@@ -54,7 +78,8 @@ Digitalización del tablón de misiones del Gremio de Aventureros utilizando PHP
 ```text
 gremio/
 ├── sql/
-│   └── gremio.sql           # Script de creación de la tabla aventureros
+│   ├── gremio.sql           # Script de creación de la tabla aventureros
+│   └── mi_aventurero.sql    # INSERT del aventurero propio (con hash)
 ├── src/
 │   ├── css/
 │   │   └── estilo.css       # Estilos CSS
@@ -67,13 +92,12 @@ gremio/
 │   │   └── sesion.php       # Gestión de sesión y cookies
 │   ├── tablon.php           # Vista principal del tablón de misiones
 │   ├── zurron.php           # Vista del zurrón del aventurero
-│   ├── login.php            # Entrada al gremio (Entrega 2)
-│   ├── logout.php           # Cierre de sesión (Entrega 2)
-│   └── preferencias.php     # Selección de tema visual (Entrega 2)
+│   ├── login.php            # Entrada al gremio
+│   ├── logout.php           # Cierre de sesión
+│   └── preferencias.php     # Selección de tema visual
 ├── LEEME.md                 # Enunciado y especificaciones del profesor
 └── MEMORIA.md               # Memoria técnica de la práctica
 ```
-
 
 ---
 
